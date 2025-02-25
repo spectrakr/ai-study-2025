@@ -93,6 +93,7 @@ wikipedia = "^1.4.0"
 scikit-learn = "^1.5.2"
 watchdog = "^6.0.0"
 langfuse = "^2.41.0"
+black = "^25.1.0"
 
 
 [build-system]
