@@ -19,6 +19,8 @@ class NodeStyles:
     )
 
 
+# 오프라인 실행이 필요하면 아래 명령어를 실행한다.
+# sudo npm install -g @mermaid-js/mermaid-cli
 def visualize_graph(graph, xray=False):
     try:
         # 그래프 시각화
