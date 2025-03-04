@@ -2074,12 +2074,12 @@ grpc = ["grpcio (>=1.44.0,<2.0.0.dev0)"]
 
 [[package]]
 name = "gradio"
-version = "5.19.0"
+version = "5.20.0"
 description = "Python library for easily interacting with trained machine learning models"
 optional = false
 python-versions = ">=3.10"
 files = [
-    {file = "gradio-5.19.0-py3-none-any.whl", hash = "sha256:e72af9ddf5889eb48c898426c56b175c76603ae720328db3e86896bfb18cf355"},
+    {file = "gradio-5.20.0-py3-none-any.whl", hash = "sha256:85e649611c343fa6c2cff50e3f6a662046158bf592eb954dffdca24e896185e5"},
 ]
 
 [package.dependencies]
@@ -2088,6 +2088,7 @@ anyio = ">=3.0,<5.0"
 fastapi = ">=0.115.2,<1.0"
 ffmpy = "*"
 gradio-client = "1.7.2"
+groovy = ">=0.1,<1.0"
 httpx = ">=0.24.1"
 huggingface-hub = ">=0.28.1"
 jinja2 = "<4.0"
@@ -2235,6 +2236,20 @@ files = [
 [package.extras]
 docs = ["Sphinx", "furo"]
 test = ["objgraph", "psutil"]
+
+[[package]]
+name = "groovy"
+version = "0.1.2"
+description = "A small Python library created to help developers protect their applications from Server Side Request Forgery (SSRF) attacks."
+optional = false
+python-versions = ">3.9"
+files = [
+    {file = "groovy-0.1.2-py3-none-any.whl", hash = "sha256:7f7975bab18c729a257a8b1ae9dcd70b7cafb1720481beae47719af57c35fa64"},
+    {file = "groovy-0.1.2.tar.gz", hash = "sha256:25c1dc09b3f9d7e292458aa762c6beb96ea037071bf5e917fc81fb78d2231083"},
+]
+
+[package.extras]
+dev = ["pytest", "ruff (==0.9.3)"]
 
 [[package]]
 name = "grpc-gateway-protoc-gen-openapiv2"
@@ -4366,6 +4381,7 @@ python-versions = ">=3.7"
 files = [
     {file = "milvus_lite-2.4.11-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:9e563ae0dca1b41bfd76b90f06b2bcc474460fe4eba142c9bab18d2747ff843b"},
     {file = "milvus_lite-2.4.11-py3-none-macosx_11_0_arm64.whl", hash = "sha256:d21472bd24eb327542817829ce7cb51878318e6173c4d62353c77421aecf98d6"},
+    {file = "milvus_lite-2.4.11-py3-none-manylinux2014_aarch64.whl", hash = "sha256:8e6ef27f7f84976f9fd0047b675ede746db2e0cc581c44a916ac9e71e0cef05d"},
     {file = "milvus_lite-2.4.11-py3-none-manylinux2014_x86_64.whl", hash = "sha256:551f56b49fcfbb330b658b4a3c56ed29ba9b692ec201edd1f2dade7f5e39957d"},
 ]
 
@@ -10139,4 +10155,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.12"
-content-hash = "93d15e9ef12d88d06a189c0d45c64509bc200588a555e390252352a85327cb6c"
+content-hash = "e011cbb53046a9892989f540820df878dc50cfa32c280bdbc050a6b1570c2f59"
