@@ -1,0 +1,16 @@
+FROM EEVE-Korean-Instruct-10.8B-v1.0-Q8_0.gguf
+
+TEMPLATE """{{- if .System }}{{ .System }}{{ end }}
+{{- range $i, $_ := .Messages }}
+{{- $last := eq (len (slice $.Messages $i)) 1}}
+{{- if eq .Role "user" }}<｜User｜>{{ .Content }}
+{{- else if eq .Role "assistant" }}<｜Assistant｜>{{ .Content }}{{- if not $last }}<｜end▁of▁sentence｜>{{- end }}
+{{- end }}
+{{- if and $last (ne .Role "assistant") }}<｜Assistant｜>{{- end }}
+{{- end }}
+"""
+
+SYSTEM """You are a helpful assistant. 모든 대답은 한국어로 해주세요."""
+
+PARAMETER stop <s>
+PARAMETER stop </s>
