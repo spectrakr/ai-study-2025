@@ -96,6 +96,7 @@ langfuse = "^2.41.0"
 black = "^25.1.0"
 gradio = "^5.20.0"
 langchain-docling = "^0.2.0"
+optimum = {extras = ["nncf", "openvino"], version = "^1.24.0"}
 
 
 [build-system]
