@@ -28,13 +28,17 @@ def print_messages():
         st.chat_message(chat_message.role).write(chat_message.content)
 
 
-if btn_reset:
+def reset():
     st.session_state["messages"] = []
     st.session_state.question = ""
 
+
+if btn_reset:
+    reset()
+
 if selected_model != st.session_state.selected_model:
     st.session_state.selected_model = selected_model
-    st.session_state["messages"] = []
+    reset()
 
 print_messages()
 
