@@ -5,13 +5,16 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
+# 실행 : streamlit run main.py
+
 load_dotenv()
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
-st.title("나의 ChatGPT :sunglasses:")
+st.title("나유경의 ChatGPT :sunglasses:")
 
+system_prompt = "당신은 친절한 AI Assistant 입니다."
 with st.sidebar:
     btn_reset = st.button("대화 초기화")
 
@@ -21,6 +24,10 @@ with st.sidebar:
         index=0,
         placeholder="모델 선택...",
     )
+
+    input = st.sidebar.text_input("System Prompt")
+    if input:
+        system_prompt = input
 
 
 user_input = st.chat_input("궁금한 점을 물어보세요~")
@@ -46,7 +53,7 @@ if user_input:
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", "당신은 친절한 AI Assistant 입니다."),
+            ("system", system_prompt),
             ("user", "#question\n{question}"),
         ]
     )
@@ -60,11 +67,11 @@ if user_input:
 
     # st.chat_message("assistant").write(ai_answer)
     with st.chat_message("assistant"):
-        container = st.empty()
+        container = st.empty() # AI 영역 안에 빈 영역을 만든다는 것
         answer = ""
         for token in ai_answer:
-            answer += token
-            container.write(answer)
+            answer += token # 답변 덮어씌우지 않고 이어붙임
+            container.write(answer) # write이 아니라  markdown으로 해도 됨.
 
     add_message(role="user", message=user_input)
     add_message(role="assistant", message=answer)
