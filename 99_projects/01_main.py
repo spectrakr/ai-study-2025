@@ -14,7 +14,7 @@ if "messages" not in st.session_state:
 st.title("나의 ChatGPT :sunglasses:")
 
 with st.sidebar:
-    btn_rest = st.button("대화 초기화")
+    btn_reset = st.button("대화 초기화")
 
     selected_model = st.selectbox(
         "GPT 모델",
@@ -31,7 +31,7 @@ def print_messages():
         st.chat_message(chat_message.role).write(chat_message.content)
 
 
-if btn_rest:
+if btn_reset:
     st.session_state["messages"] = []
 
 print_messages()
