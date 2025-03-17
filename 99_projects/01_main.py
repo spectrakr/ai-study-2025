@@ -5,12 +5,15 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
+# streamlit run 01_main.py
 load_dotenv()
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
 st.title("나의 ChatGPT :sunglasses:")
+
+system_prompt = "당신은 까칠한 AI Assistant 입니다."
 
 with st.sidebar:
     btn_reset = st.button("대화 초기화")
@@ -21,6 +24,10 @@ with st.sidebar:
         index=0,
         placeholder="모델 선택...",
     )
+
+    input = st.sidebar.text_input("System Prompt")
+    if input:
+        system_prompt = input
 
 
 user_input = st.chat_input("궁금한 점을 물어보세요~")
@@ -46,7 +53,7 @@ if user_input:
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", "당신은 친절한 AI Assistant 입니다."),
+            ("system", system_prompt),
             ("user", "#question\n{question}"),
         ]
     )
