@@ -1,0 +1,20 @@
+FROM ./phi-4-q4.gguf
+
+SYSTEM """You are a helpful AI assistant."""
+
+TEMPLATE """{{- range $i, $_ := .Messages }}
+{{- $last := eq (len (slice $.Messages $i)) 1 -}}
+<|im_start|>{{ .Role }}<|im_sep|>
+{{ .Content }}{{ if not $last }}<|im_end|>
+{{ end }}
+{{- if and (ne .Role "assistant") $last }}<|im_end|>
+<|im_start|>assistant<|im_sep|>
+{{ end }}
+{{- end }}"""
+
+PARAMETER stop "<|im_start|>"
+PARAMETER stop "<|im_end|>"
+PARAMETER stop "<|im_sep|>"
+
+PARAMETER num_ctx 8192
+

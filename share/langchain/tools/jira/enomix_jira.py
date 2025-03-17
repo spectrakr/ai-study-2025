@@ -2,6 +2,7 @@ import os
 import sys
 
 import requests
+from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 
 from share.langchain.tools.jira.issue_content_utils import (
@@ -10,6 +11,8 @@ from share.langchain.tools.jira.issue_content_utils import (
     get_comments_text,
     get_customfield_values,
 )
+
+load_dotenv()
 
 
 class EnomixJira:
@@ -141,6 +144,7 @@ class EnomixJira:
             key = issue["key"]
             summary = issue["fields"]["summary"]
             status = issue["fields"]["status"]["name"]
+            print(f"issue_type: {issue['fields']['issuetype']}")
             issue_type = issue["fields"]["issuetype"]["name"]
             updated = issue["fields"]["updated"]
             comments = issue["fields"]["comment"]["comments"]
@@ -180,11 +184,53 @@ class EnomixJira:
         else:
             return None
 
+    def create_issue(self, project_key, issue_type, summary, content):
+        issue_type = "10351"  # 작업
+        issue_type = "10113"  # 스토리
+
+        project = self.get_project(project_key)
+        print(project)
+        project_id = project["project_id"]
+
+        endpoint = f"{self.base_url}/rest/api/3/issue"
+
+        data = {
+            "fields": {
+                # "assignee": {"id": "5b109f2e9729b51b54dc274d"},
+                # "components": [{"id": "10000"}],
+                "description": {
+                    "content": [
+                        {
+                            "content": [
+                                {
+                                    "text": content,
+                                    "type": "text",
+                                }
+                            ],
+                            "type": "paragraph",
+                        }
+                    ],
+                    "type": "doc",
+                    "version": 1,
+                },
+                "issuetype": {"id": issue_type},
+                "project": {"id": project_id},
+                "summary": summary,
+            },
+            "update": {},
+        }
+        print(data)
+        response = self.send_request(endpoint, method="POST", data=data)
+
+        return response
+
 
 if __name__ == "__main__":
     jira = EnomixJira()
-    # print(enomix_jira.get_project("ENOMIX"))
-    # jql = "project = \"AVGRS\" AND updated >= '2023-01-01' "
-    # print(enomix_jira.get_issue_list(jql))
-    result = jira.get_issue("AVGRS-799")
-    print(result)
+    # print(jira.get_project("AVGRS"))
+    # print(jira.get_customfields())
+    jql = "project = \"AVGRS\" AND updated >= '2023-01-01' "
+    print(jira.get_issue_list(jql))
+    # result = jira.get_issue("AVGRS-793")
+    # print(result)
+    # jira.create_issue("AVGRS", "10351", "제목", "내용")
