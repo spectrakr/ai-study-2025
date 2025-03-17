@@ -1,0 +1,21 @@
+FROM Qwen2.5-7B.Q8_0.gguf
+
+TEMPLATE """{{- range $i, $_ := .Messages }}
+{{- $last := eq (len (slice $.Messages $i)) 1 }}
+{{- if or (eq .Role "user") (eq .Role "system") }}<start_of_turn>user
+{{ .Content }}<end_of_turn>
+{{ if $last }}<start_of_turn>model
+{{ end }}
+{{- else if eq .Role "assistant" }}<start_of_turn>model
+{{ .Content }}{{ if not $last }}<end_of_turn>
+{{ end }}
+{{- end }}
+{{- end }}"""
+PARAMETER stop "<end_of_turn>"
+PARAMETER temperature 0.1
+
+SYSTEM """
+당신은 Qwen AI 어시스턴트입니다.
+응답은 한국어로 해야 합니다.
+"""
+
