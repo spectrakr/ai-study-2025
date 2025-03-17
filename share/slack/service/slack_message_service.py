@@ -125,30 +125,51 @@ class SlackMessageService:
             logger.error(f"Failed to get thread messages: {str(e)}")
             raise SlackMessageError(f"Failed to get thread messages: {str(e)}")
 
+    @RetryUtil.retry(max_retries=3, delay=1.0, backoff=2.0)
+    def send_message(self, channel_id: str, text: str):
+        """메시지 보내기"""
+        try:
+            logger.debug(f" send message channel_id : {channel_id},  message: {text}")
+
+            self.client.post_message(channel_id, text)
+
+            logger.debug(
+                f" Successfully send message channel_id : {channel_id},  message: {text}"
+            )
+        except Exception as e:
+            if isinstance(e, SlackAPIError):
+                raise
+            logger.error(f"Failed to send message: {str(e)}")
+            raise SlackMessageError(f"Failed to send message: {str(e)}")
+
+
+# if __name__ == "__main__":
+#     service = SlackMessageService()
+#     try:
+#         for message in service.get_messages("C06G2M66F7B").messages:
+#             print(f"{message.user}  {message.ts}: {message.text} \n ")
+#             print(
+#                 "\n".join(
+#                     ["thread"]
+#                     + list(
+#                         map(
+#                             lambda thread: f"{thread.user} {thread.ts}: {thread.text}",
+#                             message.thread_messages,
+#                         )
+#                     )
+#                     + ["thread end"]
+#                 )
+#             )
+#     except SlackMessageError as e:
+#         logger.error(f"Error getting messages: {e}")
+#         print(f"Error getting messages: {e}")
+#     except SlackAPIError as e:
+#         logger.error(f"Slack API error: {e}")
+#         print(f"Slack API error: {e}")
+#     except Exception as e:
+#         logger.error(f"Unexpected error: {e}")
+#         print(f"Unexpected error: {e}")
 
 if __name__ == "__main__":
     service = SlackMessageService()
-    try:
-        for message in service.get_messages("C06G2M66F7B").messages:
-            print(f"{message.user}  {message.ts}: {message.text} \n ")
-            print(
-                "\n".join(
-                    ["thread"]
-                    + list(
-                        map(
-                            lambda thread: f"{thread.user} {thread.ts}: {thread.text}",
-                            message.thread_messages,
-                        )
-                    )
-                    + ["thread end"]
-                )
-            )
-    except SlackMessageError as e:
-        logger.error(f"Error getting messages: {e}")
-        print(f"Error getting messages: {e}")
-    except SlackAPIError as e:
-        logger.error(f"Slack API error: {e}")
-        print(f"Slack API error: {e}")
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}")
-        print(f"Unexpected error: {e}")
+    service.send_message("C08DXE0FJJE", "test")
