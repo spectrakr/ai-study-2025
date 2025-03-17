@@ -24,14 +24,14 @@ tech_talk_contents = """ 작성자: 민정
 
 
 ### Define the Pydantic class
-class EmailSummary(BaseModel):
+class TechTalkSummary(BaseModel):
     speaker: str = Field(description="발표자")
     subject: str = Field(description="발표 주제")
     date: str = Field(description="시작 일시(YYYY-MM-DD HH:MM:SS)")
 
 
 ### Define the PydanticOutputParser
-parser = PydanticOutputParser(pydantic_object=EmailSummary)
+parser = PydanticOutputParser(pydantic_object=TechTalkSummary)
 # print(parser.get_format_instructions())
 
 ### Define the prompt
