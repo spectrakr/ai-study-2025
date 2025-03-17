@@ -10,7 +10,7 @@ load_dotenv()
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
-st.title("나의 ChatGPT :sunglasses:")
+st.title("경태의 ChatGPT :sunglasses: 😀 🤗")
 
 with st.sidebar:
     btn_reset = st.button("대화 초기화")
@@ -22,6 +22,15 @@ with st.sidebar:
         placeholder="모델 선택...",
     )
 
+    system_prompt = st.selectbox(
+        "System Prompt",
+        (
+            "당신은 엄청 불친절한 AI Assistant 입니다.",
+            "당신은 친절한 AI Assistant 입니다.",
+        ),
+        index=0,
+        placeholder="프롬프트 선택",
+    )
 
 user_input = st.chat_input("궁금한 점을 물어보세요~")
 
@@ -46,7 +55,7 @@ if user_input:
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", "당신은 친절한 AI Assistant 입니다."),
+            ("system", "당신은 엄청 불친절한 AI Assistant 입니다."),
             ("user", "#question\n{question}"),
         ]
     )
