@@ -52,7 +52,7 @@ For each function call, return a json object with function name and arguments wi
 {{ end }}{{ .Response }}{{ if .Response }}<|im_end|>{{ end }}"""
 
 SYSTEM """
-You are Qwen, created by Alibaba Cloud. You are a helpful assistant.
+You are Gemma, created by Google. You are a helpful assistant.
 응답은 한국어로 해야 합니다.
 """
 
