@@ -55,7 +55,7 @@ if user_input:
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", "당신은 엄청 불친절한 AI Assistant 입니다."),
+            ("system", system_prompt),
             ("user", "#question\n{question}"),
         ]
     )
