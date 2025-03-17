@@ -1,14 +1,12 @@
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import PydanticOutputParser
+from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
-
-from share.messages import stream_response
 
 load_dotenv()
 
-tech_talk_contents = """ 작성자: 민정
+tech_talk_conversation = """ 
+작성자: 민정
 :spiral_calendar_pad:  2:03 PM
 :loudspeaker: 2025년 세 번째 테크톡에 여러분을 초대합니다! :tada:
 :tulip: 봄바람 살랑이는 3월, 새로운 시작을 테크톡과 함께해보아요!
@@ -27,12 +25,8 @@ tech_talk_contents = """ 작성자: 민정
 class TechTalkSummary(BaseModel):
     speaker: str = Field(description="발표자")
     subject: str = Field(description="발표 주제")
-    date: str = Field(description="시작 일시(YYYY-MM-DD HH:MM:SS)")
+    date: str = Field(description="일시 (YYYY-MM-DD HH:MM:SS)")
 
-
-### Define the PydanticOutputParser
-parser = PydanticOutputParser(pydantic_object=TechTalkSummary)
-# print(parser.get_format_instructions())
 
 ### Define the prompt
 prompt = PromptTemplate.from_template(
@@ -42,24 +36,22 @@ You are a helpful assistant. Please answer the following questions in KOREAN.
 QUESTION:
 {question}
 
-EMAIL CONVERSATION:
-{email_conversation}
-
-FORMAT:
-{format}
+TECH TALK CONVERSATION:
+{tech_talk_conversation}
 """
 )
-prompt = prompt.partial(format=parser.get_format_instructions())
 
-llm = ChatOpenAI(temperature=0, model_name="gpt-4o-mini")
+llm = ChatOpenAI(temperature=0, model="gpt-4o-mini").with_structured_output(
+    TechTalkSummary
+)
 
 chain = prompt | llm
 
-response = chain.stream(
+answer = chain.invoke(
     {
-        "email_conversation": tech_talk_contents,
-        "question": "내용 중 주요 내용을 추출해서 json format으로 반환해 주세요.",
+        "tech_talk_conversation": tech_talk_conversation,
+        "question": "내용 중 주요 내용을 추출해 주세요.",
     }
 )
 
-output = stream_response(response, return_output=True)
+print(answer.model_dump_json())
