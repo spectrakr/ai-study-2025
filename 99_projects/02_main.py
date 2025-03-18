@@ -1,3 +1,5 @@
+import json
+
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
@@ -54,4 +56,4 @@ answer = chain.invoke(
     }
 )
 
-print(answer.model_dump_json())
+print(json.dumps(answer.model_dump(), indent=4, ensure_ascii=False))
