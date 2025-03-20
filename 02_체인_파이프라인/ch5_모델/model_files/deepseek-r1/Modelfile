@@ -1,0 +1,24 @@
+FROM DeepSeek-R1-Distill-Qwen-14B-Q8_0.gguf
+
+TEMPLATE """{{- if .System }}{{ .System }}{{ end }}
+{{- range $i, $_ := .Messages }}
+{{- $last := eq (len (slice $.Messages $i)) 1}}
+{{- if eq .Role "user" }}<｜User｜>{{ .Content }}
+{{- else if eq .Role "assistant" }}<｜Assistant｜>{{ .Content }}{{- if not $last }}<｜end▁of▁sentence｜>{{- end }}
+{{- end }}
+{{- if and $last (ne .Role "assistant") }}<｜Assistant｜>{{- end }}
+{{- end }}"""
+
+PARAMETER stop <｜begin▁of▁sentence｜>
+PARAMETER stop <｜end▁of▁sentence｜>
+PARAMETER stop <｜User｜>
+PARAMETER stop <｜Assistant｜>
+
+PARAMETER temperature 0.7
+PARAMETER min_p 0.1
+
+SYSTEM """
+당신은 DeepSeek R1, 강력한 AI 어시스턴트입니다.
+응답은 한국어로 해야 합니다.
+"""
+

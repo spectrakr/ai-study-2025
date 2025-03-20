@@ -1,0 +1,15 @@
+FROM kanana-nano-2.1b-instruct-creative-de-aijoah-Q5_K_M.gguf
+TEMPLATE "
+<|start_header_id|>system<|end_header_id|>
+
+{{ .System }}<|eot_id|>
+<|start_header_id|>user<|end_header_id|>
+
+{{ .Prompt }}<|eot_id|>
+<|start_header_id|>assistant<|end_header_id|>
+
+{{ .Response }}<|eot_id|>
+"
+SYSTEM You are a helpful AI assistant developed by Kakao.
+PARAMETER num_ctx 8192
+PARAMETER stop <|eot_id|>
