@@ -5,6 +5,7 @@ from langchain_core.messages import ChatMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
+from langchain_elasticsearch import ElasticsearchStore
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 load_dotenv()
@@ -45,6 +46,7 @@ def add_message(role, message):
 
 def format_docs(docs):
     # formatted_docs = "\n\n".join([f"{doc.page_content}" for doc in docs])
+    # list comprehension 구문
     formatted_docs = "\n\n".join(
         [
             f"<document><content>{doc.page_content}</content><source>{doc.metadata['source']}</source><page>{int(doc.metadata['page'])+1}</page></document>"
@@ -58,9 +60,15 @@ def format_docs(docs):
     return formatted_docs
 
 
-vector_store = Chroma(
-    embedding_function=OpenAIEmbeddings(model="text-embedding-3-small"),
-    persist_directory="./vector_store",
+# vector_store = Chroma(
+#     embedding_function=OpenAIEmbeddings(model="text-embedding-3-small"),
+#     persist_directory="./vector_store",
+# )
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+vector_store = ElasticsearchStore(
+    es_url="http://172.16.120.203:9201",
+    index_name="kmhan_pdf",
+    embedding=embeddings,
 )
 
 if user_input:
