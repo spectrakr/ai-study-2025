@@ -22,6 +22,10 @@ with st.sidebar:
         placeholder="모델 선택...",
     )
 
+    system_prompt = st.text_input(
+        "System Prompt", "당신은 엄청 불친절한 AI Assistant 입니다."
+    )
+
 
 user_input = st.chat_input("궁금한 점을 물어보세요~")
 
@@ -46,7 +50,7 @@ if user_input:
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", "당신은 친절한 AI Assistant 입니다."),
+            ("system", system_prompt),
             ("user", "#question\n{question}"),
         ]
     )
