@@ -52,7 +52,7 @@ class EnomixJira:
         else:
             raise ValueError(f"Unsupported method: {method}")
 
-        if response.status_code != 200:
+        if not str(response.status_code).startswith("2"):  # 200 or 201
             print(f"Failed to fetch data. Status code: {response.status_code}")
             print(f"Response: {response.text}")
             return None
@@ -189,7 +189,7 @@ class EnomixJira:
         issue_type = "10113"  # 스토리
 
         project = self.get_project(project_key)
-        print(project)
+        # print(project)
         project_id = project["project_id"]
 
         endpoint = f"{self.base_url}/rest/api/3/issue"
@@ -219,8 +219,9 @@ class EnomixJira:
             },
             "update": {},
         }
-        print(data)
+        print(f"[create_issue] data: {data}")
         response = self.send_request(endpoint, method="POST", data=data)
+        print(f"[create_issue] response: {response}")
 
         return response
 
