@@ -6,8 +6,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 load_dotenv()
 
-file_name = "CleanCode20pages.pdf"
-
 def run_embedding():
     loader = PDFPlumberLoader(
         file_path="./data/CleanCode20pages.pdf"
