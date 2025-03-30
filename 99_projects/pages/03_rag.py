@@ -52,6 +52,10 @@ def format_docs(docs):
             for doc in docs
         ]
     )
+    print("======= formatted_docs =======")
+    print(formatted_docs)
+
+    return formatted_docs
 
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
