@@ -1,12 +1,30 @@
+import os
+import sys
+
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_chroma import Chroma
+from elasticsearch import Elasticsearch
+from langchain.retrievers import EnsembleRetriever
 from langchain_core.messages import ChatMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_elasticsearch import ElasticsearchStore
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+
+
+def load_path():
+    project = "ai-study-2025"
+    file_path = os.path.dirname(__file__)
+    load_sys_path = file_path[: file_path.rfind(project) + len(project)]
+    sys.path.append(load_sys_path)
+
+
+load_path()
+
+from share.langchain.retriever.custom_elastic_search_bm25 import (
+    CustomElasticSearchBM25Retriever,
+)
 
 load_dotenv()
 
@@ -47,6 +65,7 @@ def add_message(role, message):
 def format_docs(docs):
     # formatted_docs = "\n\n".join([f"{doc.page_content}" for doc in docs])
     # list comprehension 구문
+    print(f"======= 검색결과: {len(docs)}건 =======")
     formatted_docs = "\n\n".join(
         [
             f"<document><content>{doc.page_content}</content><source>{doc.metadata['source']}</source><page>{int(doc.metadata['page'])+1}</page></document>"
@@ -54,22 +73,29 @@ def format_docs(docs):
         ]
     )
 
-    print("======= formatted_docs =======")
-    print(formatted_docs)
+    # print(formatted_docs)
 
     return formatted_docs
 
 
-# vector_store = Chroma(
-#     embedding_function=OpenAIEmbeddings(model="text-embedding-3-small"),
-#     persist_directory="./vector_store",
-# )
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 vector_store = ElasticsearchStore(
     es_url="http://172.16.120.203:9201",
     index_name="kmhan_pdf",
     embedding=embeddings,
 )
+vector_retriever = vector_store.as_retriever(search_kwargs={"k": 3})
+
+elasticsearch_client = Elasticsearch(hosts=["http://172.16.120.203:9201"])
+bm25_retriever = CustomElasticSearchBM25Retriever(
+    client=elasticsearch_client, index_name="kmhan_pdf", k=3
+)
+
+retriever = EnsembleRetriever(
+    retrievers=[bm25_retriever, vector_retriever],
+    weights=[0.5, 0.5],
+)
+
 
 if user_input:
     st.chat_message("user").write(user_input)
@@ -84,22 +110,19 @@ If you don't know the answer, you must say '잘 몰라유~'
 Write citation in answer with new line. You must write only filename without filepath.  (ex: 출처: abcdf.pdf)
 Answer in KOREAN.
 
-#question
+#Question
 {question}
 
-#context
+#Context
 {context}
 
-#answer:
-            """,
+#answer:""",
             ),
         ]
     )
 
     llm = ChatOpenAI(model_name=selected_model, temperature=0)
     output_parser = StrOutputParser()
-
-    retriever = vector_store.as_retriever()
 
     # chain
     chain = (
@@ -110,7 +133,6 @@ Answer in KOREAN.
     )
     ai_answer = chain.stream(user_input)
 
-    # st.chat_message("assistant").write(ai_answer)
     with st.chat_message("assistant"):
         container = st.empty()
         answer = ""
