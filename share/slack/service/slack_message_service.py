@@ -1,7 +1,7 @@
 from typing import List, Dict, Any
 from share.slack.client.slack_message_client import SlackMessageClient
 from share.slack.client.model.slack_message_dto import SlackMessageDto
-from share.slack.client.sdo.slack_message import (
+from share.slack.sdo.slack_message import (
     SlackMessage,
     SlackThread,
     SlackMessages,
@@ -143,33 +143,7 @@ class SlackMessageService:
             raise SlackMessageError(f"Failed to send message: {str(e)}")
 
 
-# if __name__ == "__main__":
-#     service = SlackMessageService()
-#     try:
-#         for message in service.get_messages("C06G2M66F7B").messages:
-#             print(f"{message.user}  {message.ts}: {message.text} \n ")
-#             print(
-#                 "\n".join(
-#                     ["thread"]
-#                     + list(
-#                         map(
-#                             lambda thread: f"{thread.user} {thread.ts}: {thread.text}",
-#                             message.thread_messages,
-#                         )
-#                     )
-#                     + ["thread end"]
-#                 )
-#             )
-#     except SlackMessageError as e:
-#         logger.error(f"Error getting messages: {e}")
-#         print(f"Error getting messages: {e}")
-#     except SlackAPIError as e:
-#         logger.error(f"Slack API error: {e}")
-#         print(f"Slack API error: {e}")
-#     except Exception as e:
-#         logger.error(f"Unexpected error: {e}")
-#         print(f"Unexpected error: {e}")
-
 if __name__ == "__main__":
     service = SlackMessageService()
-    service.send_message("C08DXE0FJJE", "test")
+    # service.send_message("C08DXE0FJJE", "test")
+    print(service.get_messages("C08DXE0FJJE").messages)

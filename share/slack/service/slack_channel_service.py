@@ -1,4 +1,4 @@
-from share.slack.client.sdo.slack_channel import (
+from share.slack.sdo.slack_channel import (
     SlackChannelRdoListRdo,
     SlackChannelRdo,
 )
@@ -57,6 +57,7 @@ class SlackChannelService:
             raise SlackChannelError(f"Failed to get channels: {str(e)}")
 
     def get_all_channels(self) -> SlackChannelRdoListRdo:
+        """모든 채널 조회"""
         channels = []
         next_cursor = ""
         while True:
@@ -67,7 +68,16 @@ class SlackChannelService:
                 break
         return SlackChannelRdoListRdo(channels, "")
 
+    def get_all_joined_channels(self):
+        """해당 봇에 권한이 있는 모든 채널 조회"""
+        all_channels = self.get_all_channels().channels
+        logger.info(f"all channels cnt : {len(all_channels)}")
+        joined_channels = [channel for channel in all_channels if channel.is_member]
+        logger.info(f"joined channels cnt : {len(joined_channels)}")
+        return SlackChannelRdoListRdo(joined_channels, "")
+
 
 if __name__ == "__main__":
     service = SlackChannelService()
-    print(service.get_all_channels().to_dict())
+    for k, v in service.get_all_joined_channels().to_dict().items():
+        print(k, v)
