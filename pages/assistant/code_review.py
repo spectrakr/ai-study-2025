@@ -19,16 +19,21 @@ class CodeReview:
                 3. Performance improvement points
                 4. Compliance with coding conventions
                 5. Security vulnerabilities"
-                6. filename은 꼭 경로를 포함한 full path로 입력해줘
                 """,
             ),
             (
                 "user",
                 """
                 아래 github pull request diff 정보를 활용해 코드 리뷰 해줘
-                응답 값에 filename ( 경로를 포함한 path )과 comment는 꼭 추가 해줘
-                filename 
-                comment
+                응답 값에 각각의 filename 별로 comment를 작성해서 추가해줘 
+                
+                ex)
+                1. filename
+                    filename_comment
+                2. filename
+                    filename_comment
+            
+                
                 pull request diff start
                 {code}
                 pull request diff end

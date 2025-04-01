@@ -259,17 +259,16 @@ def get_github_pr(url: str) -> str:
 
 
 @tool
-def post_review_comment(url: str, file_path: str, review_text: str) -> str:
+def post_review_comment(url: str, reviews_text: str) -> str:
     """
-    github pull 주소와 file path 리뷰 결과를 입력받아 github에 comment를 남기는 도구
+    github pull 주소에 리뷰 결과를 입력받아 github에 comment를 남기는 도구
 
     :param url: 입력받은 pull request 주소
-    :param file_path: 파일의 주소
-    :param review_text: 남길 comment
+    :param reviews_text: 추가할 comment
     :return:
     """
     try:
         pr_api_url = GitHubClient.replace_issue_api_url(url)
-        return GitHubClient.post_review_comment(pr_api_url, file_path, review_text)
+        return GitHubClient.post_review_comment(pr_api_url, reviews_text)
     except Exception as e:
         return f"코드 수정정보 가져오기 실패: {e}"

@@ -29,10 +29,10 @@ class GitHubClient:
         return None
 
     @classmethod
-    def post_review_comment(cls, url, file_name, review_text):
+    def post_review_comment(cls, url, reviews_text):
         post_url = f"{url}/comments"
         data = {
-            "body": f"{file_name} \n {review_text}",
+            "body": f"{reviews_text}",
         }
         logger.info(f"issue url : {post_url}")
         logger.info(data)
