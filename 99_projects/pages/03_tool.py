@@ -28,6 +28,7 @@ from pages.assistant.custom_tools import (
     open_slack,
     search_food,
     search_chinese_food,
+    search_stock_news,
 )
 
 
@@ -118,6 +119,7 @@ if user_input:
         open_slack,
         search_food,
         search_chinese_food,
+        search_stock_news,
     ]
 
     agent = create_tool_calling_agent(llm, tools, prompt)
