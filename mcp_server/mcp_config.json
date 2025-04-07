@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "post_notion": {
+      "command": "poetry",
+      "args": [
+        "run",
+        "-C",
+        "/Users/seokjun/spectra/ai-study-2025",
+        "python",
+        "/Users/seokjun/spectra/ai-study-2025/mcp_server/notion_post.py"
+      ]
+    }
+  }
+}
