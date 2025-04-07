@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class SlackChannelRdo(BaseModel):
     id: str
     name: str
+    is_member: bool
 
 
 class SlackChannelRdoListRdo(object):
@@ -19,3 +20,6 @@ class SlackChannelRdoListRdo(object):
         for channel in self.channels:
             dic[channel.id] = channel.name
         return dic
+
+    def __str__(self):
+        return str(self.channels)
