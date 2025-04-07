@@ -13,10 +13,13 @@ class SlackChannelClient(object):
         return self.session.post(url, data={"channel": channel_id}).json()
 
     def get_channels(self, next_cursor=""):
-        url = f"https://slack.com/api/conversations.list?cursor={next_cursor}"
+        url = f"https://slack.com/api/conversations.list?cursor={next_cursor}&limit=1000&exclude_archived=true"
         return self.session.get(url).json()
 
 
 if __name__ == "__main__":
     client = SlackChannelClient()
     print(client.get_channels())
+
+    # channels = client.get_channels().get("channels")
+    # print(len(channels))
