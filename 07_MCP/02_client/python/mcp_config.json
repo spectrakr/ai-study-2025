@@ -10,9 +10,6 @@
         "/Users/rudaks/_WORK/_GIT/ai-study-2025/07_MCP/01_server/python/spectra_dayoff/server_local.py"
       ]
     },
-    "test": {
-      "url": "http://localhost:8000/sse"
-    },
     "desktop-commander": {
       "command": "npx",
       "args": [

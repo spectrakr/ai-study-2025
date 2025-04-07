@@ -1,7 +1,6 @@
 import json
 
 from dotenv import load_dotenv
-from langchain.memory import ConversationBufferMemory
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
@@ -50,7 +49,8 @@ async def main():
     async with MultiServerMCPClient(server_config) as client:
         agent = create_react_agent(model, client.get_tools())
 
-        query = "오늘 휴가자 누구야?"
+        # query = "오늘 휴가자 누구야?"
+        query = "/tmp 경로에 파일 목록 알려줘"
         response = await agent.ainvoke({"messages": query})
         print(f"도구 호출 결과")
         print(f"{response['messages'][-1].content}")
