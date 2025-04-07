@@ -1,69 +1,59 @@
+import json
+
 from dotenv import load_dotenv
-from langchain_mcp_adapters.tools import load_mcp_tools
-from langchain_openai import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableParallel
 from langchain.memory import ConversationBufferMemory
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langchain_openai import ChatOpenAI
+from langgraph.prebuilt import create_react_agent
 
 load_dotenv()
 
 model = ChatOpenAI(model="gpt-4o-mini")
 
-server_params = StdioServerParameters(
-    command="python",
-    args=[
-        "/Users/macbookpro/_WORK/_GIT/ai-study-2025/07_MCP/01_server/python/spectra_dayoff/spectra_dayoff.py"
-    ],
-)
 
-# 메모리 초기화
-memory = ConversationBufferMemory(return_messages=True)
+def load_mcp_config():
+    """현재 디렉토리의 MCP 설정 파일을 로드합니다."""
+    try:
+        with open("./mcp_config.json", "r") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"설정 파일을 읽는 중 오류 발생: {str(e)}")
+        return None
+
+
+def create_server_config():
+    """MCP 서버 설정을 생성합니다."""
+    config = load_mcp_config()
+    server_config = {}
+
+    if config and "mcpServers" in config:
+        for server_name, server_config_data in config["mcpServers"].items():
+            # command가 있으면 stdio 방식
+            if "command" in server_config_data:
+                server_config[server_name] = {
+                    "command": server_config_data.get("command"),
+                    "args": server_config_data.get("args", []),
+                    "transport": "stdio",
+                }
+            # url이 있으면 sse 방식
+            elif "url" in server_config_data:
+                server_config[server_name] = {
+                    "url": server_config_data.get("url"),
+                    "transport": "sse",
+                }
+
+    return server_config
 
 
 async def main():
-    async with stdio_client(server_params) as (read, write):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-            tools = await load_mcp_tools(session)
+    server_config = create_server_config()
+    async with MultiServerMCPClient(server_config) as client:
+        agent = create_react_agent(model, client.get_tools())
 
-            # 휴가 정보 체인
-            vacation_prompt = ChatPromptTemplate.from_messages(
-                [
-                    ("system", "당신은 휴가 정보를 조회하는 도우미입니다."),
-                    ("human", "{input}"),
-                ]
-            )
-            vacation_chain = vacation_prompt | model | StrOutputParser()
-
-            # 날짜 정보 체인
-            date_prompt = ChatPromptTemplate.from_messages(
-                [
-                    ("system", "당신은 날짜 정보를 분석하는 도우미입니다."),
-                    ("human", "오늘 날짜에 대해 설명해주세요: {input}"),
-                ]
-            )
-            date_chain = date_prompt | model | StrOutputParser()
-
-            # 병렬 체인 구성
-            combined_chain = RunnableParallel(
-                vacation_info=vacation_chain, date_analysis=date_chain
-            )
-
-            # 실행
-            query = "오늘 휴가자는?"
-            response = await combined_chain.ainvoke({"input": query})
-
-            # 메모리에 대화 저장
-            memory.save_context({"input": query}, {"output": str(response)})
-
-            print("\n=== 응답 결과 ===")
-            print("휴가 정보:", response["vacation_info"])
-            print("날짜 분석:", response["date_analysis"])
-            print("\n=== 대화 기록 ===")
-            print(memory.load_memory_variables({}))
+        query = "오늘 휴가자 누구야?"
+        response = await agent.ainvoke({"messages": query})
+        print(f"도구 호출 결과")
+        print(f"{response['messages'][-1].content}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "spectra-dayoff": {
+      "command": "poetry",
+      "args": [
+        "run",
+        "-C",
+        "/Users/rudaks/_WORK/_GIT/ai-study-2025",
+        "python",
+        "/Users/rudaks/_WORK/_GIT/ai-study-2025/07_MCP/01_server/python/spectra_dayoff/server_local.py"
+      ]
+    },
+    "test": {
+      "url": "http://localhost:8000/sse"
+    },
+    "desktop-commander": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@wonderwhy-er/desktop-commander",
+        "--key",
+        "4cbe9965-abb2-485c-ba13-87c16b33d64c"
+      ]
+    }
+  }
+}

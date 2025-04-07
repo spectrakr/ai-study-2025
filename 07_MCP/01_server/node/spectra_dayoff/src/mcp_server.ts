@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-const server = new McpServer({
+export const mcp_server = new McpServer({
     name: "spectra-dayoff",
     version: "1.0.0",
     capabilities: {
@@ -11,8 +11,7 @@ const server = new McpServer({
     },
 });
 
-
-server.tool(
+mcp_server.tool(
     "get-current-date",
     "현재 날짜를 가져온다.",
     {},
@@ -29,7 +28,7 @@ server.tool(
     },
 );
 
-server.tool(
+mcp_server.tool(
     "get-dayoff",
     "연차, 휴가를 조회한다.",
     {
@@ -48,13 +47,6 @@ server.tool(
     },
 );
 
-async function main() {
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
-    console.error("Spectra Dayoff MCP Server running on stdio");
-  }
-  
-  main().catch((error) => {
-    console.error("Fatal error in main():", error);
-    process.exit(1);
-  });
+export const connectServer = async (transport: StdioServerTransport) => {
+    await mcp_server.connect(transport);
+}; 

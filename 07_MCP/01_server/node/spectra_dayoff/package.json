@@ -1,18 +1,20 @@
 {
   "name": "spectra_dayoff",
   "version": "1.0.0",
-  "type": "module",
   "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
   "main": "index.js",
   "bin": {
-    "weather": "./build/index.js"
-  },
-  "scripts": {
-    "build": "tsc && chmod 755 build/index.js"
+    "weather": "build/index.js"
   },
   "files": [
     "build"
   ],
+  "scripts": {
+    "build": "tsc && chmod 755 build/server_local.js"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.8.0",
     "zod": "^3.24.2"
