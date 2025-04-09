@@ -5,7 +5,7 @@ from typing import List, Annotated
 
 
 class PDFRetrievalChain(RetrievalChain):
-    def __init__(self, source_uri: Annotated[str, "Source URI"]):
+    def __init__(self, source_uri: Annotated[list, "Source URI"]):
         self.source_uri = source_uri
         self.k = 10
 
