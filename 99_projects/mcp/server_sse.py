@@ -9,6 +9,8 @@ if __name__ == "__main__":
     try:
         logger.info("SSE 서버 실행 시작")
         run_server(transport="sse")
+    except KeyboardInterrupt:
+        logger.info("SSE 서버 종료")
     except Exception as e:
         logger.error(f"SSE 서버 실행 실패: {str(e)}")
         raise
