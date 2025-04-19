@@ -11,13 +11,13 @@ from langgraph.graph.state import CompiledStateGraph
 @dataclass
 class NodeStyles:
     default: str = (
-        "fill:#45C4B0, fill-opacity:0.3, color:#23260F, stroke:#45C4B0, stroke-width:1px, font-weight:normal, line-height:1, font-size:8px"  # 기본 색상
+        "fill:#45C4B0, fill-opacity:0.3, color:#23260F, stroke:#45C4B0, stroke-width:1px, font-weight:bold, line-height:1.2"  # 기본 색상
     )
     first: str = (
-        "fill:#45C4B0, fill-opacity:0.1, color:#23260F, stroke:#45C4B0, stroke-width:1px, font-weight:normal, font-style:italic, stroke-dasharray:2,2, font-size:8px"  # 점선 테두리
+        "fill:#45C4B0, fill-opacity:0.1, color:#23260F, stroke:#45C4B0, stroke-width:1px, font-weight:normal, font-style:italic, stroke-dasharray:2,2"  # 점선 테두리
     )
     last: str = (
-        "fill:#45C4B0, fill-opacity:1, color:#000000, stroke:#45C4B0, stroke-width:1px, font-weight:normal, font-style:italic, stroke-dasharray:2,2, font-size:8px"  # 점선 테두리
+        "fill:#45C4B0, fill-opacity:1, color:#000000, stroke:#45C4B0, stroke-width:1px, font-weight:normal, font-style:italic, stroke-dasharray:2,2"  # 점선 테두리
     )
 
 
@@ -43,10 +43,6 @@ def visualize_graph(graph, xray=False):
                     graph.get_graph(xray=xray).draw_mermaid_png(
                         background_color="white",
                         node_colors=NodeStyles(),
-                        curve_style=CurveStyle.LINEAR,
-                        wrap_label_n_words=6,
-                        draw_method=MermaidDrawMethod.PYPPETEER,
-                        padding=5,
                     )
                 )
             )
