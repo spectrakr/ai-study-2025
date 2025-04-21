@@ -1,11 +1,11 @@
 import random
-import traceback
+from dataclasses import dataclass
 
 from IPython.display import Image, display
 from langchain_core.messages import AIMessage
 from langchain_core.runnables import RunnableConfig
+from langchain_core.runnables.graph import CurveStyle, MermaidDrawMethod
 from langgraph.graph.state import CompiledStateGraph
-from dataclasses import dataclass
 
 
 @dataclass
@@ -21,8 +21,19 @@ class NodeStyles:
     )
 
 
-# 오프라인 실행이 필요하면 아래 명령어를 실행한다.
-# sudo npm install -g @mermaid-js/mermaid-cli
+@dataclass
+class LocalNodeStyles:
+    default: str = (
+        "fill:#45C4B0, fill-opacity:0.3, color:#23260F, stroke:#45C4B0, stroke-width:1px, font-weight:bold, line-height:1.2"  # 기본 색상
+    )
+    first: str = (
+        "fill:#45C4B0, fill-opacity:0.1, color:#23260F, stroke:#45C4B0, stroke-width:1px, font-weight:normal, font-style:italic, stroke-dasharray:2,2"  # 점선 테두리
+    )
+    last: str = (
+        "fill:#45C4B0, fill-opacity:1, color:#000000, stroke:#45C4B0, stroke-width:1px, font-weight:normal, font-style:italic, stroke-dasharray:2,2"  # 점선 테두리
+    )
+
+
 def visualize_graph(graph, xray=False):
     try:
         # 그래프 시각화
@@ -32,6 +43,40 @@ def visualize_graph(graph, xray=False):
                     graph.get_graph(xray=xray).draw_mermaid_png(
                         background_color="white",
                         node_colors=NodeStyles(),
+                    )
+                )
+            )
+    except Exception as e:
+        print(f"[ERROR] Visualize Graph Error: {e}")
+
+
+# 오프라인 실행이 필요하면 아래 명령어를 실행한다.
+# sudo npm install -g @mermaid-js/mermaid-cli
+def visualize_graph_local(graph, xray=False):
+    """
+    인터넷 연결 없이 로컬에서 mermaid-cli를 사용하여 그래프를 시각화합니다.
+
+    Args:
+        graph: 시각화할 그래프 객체
+        xray (bool): xray 모드 활성화 여부
+
+    Note:
+        사용 전 다음 명령어로 mermaid-cli를 설치해야 합니다:
+        sudo npm install -g @mermaid-js/mermaid-cli
+    """
+    try:
+        # 그래프 시각화
+        if isinstance(graph, CompiledStateGraph):
+            display(
+                Image(
+                    graph.get_graph(xray=xray).draw_mermaid_png(
+                        curve_style=CurveStyle.LINEAR,
+                        node_colors=LocalNodeStyles(),
+                        wrap_label_n_words=6,
+                        output_file_path=None,
+                        draw_method=MermaidDrawMethod.PYPPETEER,
+                        background_color="white",
+                        padding=5,
                     )
                 )
             )
