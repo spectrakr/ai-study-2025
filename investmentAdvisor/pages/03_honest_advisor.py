@@ -15,7 +15,7 @@ load_dotenv()
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
-st.title("공매도 재개 증시 영향 보고서 RAG")
+st.title("TIGER ETF 문의 응답 봇 :sunglasses:")
 
 with st.sidebar:
     btn_reset = st.button("대화 초기화")
