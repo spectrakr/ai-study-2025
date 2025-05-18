@@ -22,6 +22,7 @@ from langchain.schema import LLMResult
 
 from pages.tools.tools import (
     search_stock_news_from_naver,
+    get_stock_info,
 )
 
 
@@ -30,7 +31,7 @@ load_dotenv()
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
-st.title("주니어 Advisor :sunglasses:")
+st.title("시니어 Advisor :sunglasses:")
 
 with st.sidebar:
     btn_reset = st.button("대화 초기화")
@@ -86,15 +87,18 @@ if user_input:
                 """당신은 전문적인 투자 조언가입니다. 
                 
                 주식과 ETF에 대한 투자 조언을 제공합니다.
-                다음 사항들을 고려하여 조언해주세요:
+                - 우선 종목정보를 표시합니다.
+                그리고, 다음 사항들을 고려하여 조언해주세요:
                 - 거시경제 상황 (미국, 중국의 정치/경제 상황)
                 - 미국채 10년물 금리
                 - FOMC의 통화/재정정책
                 - 특정 종목/ETF의 시황
                 - RSI 기반 매수/매도 시점
                 
-                아래 도구의 도움을 받을 수 있습니다.
+                아래 도구들을 사용해서 도움을 받으세요.
                 - Naver Finance 금융정보 검색 도구
+                - Yahoo Finance 종목정보 검색 도구
+                
                 """,
             ),
             (
@@ -116,9 +120,7 @@ if user_input:
         callbacks=[stream_handler],
     )
     output_parser = StrOutputParser()
-    tools = [
-        search_stock_news_from_naver,
-    ]
+    tools = [search_stock_news_from_naver, get_stock_info]
 
     agent = create_tool_calling_agent(llm, tools, prompt)
 
