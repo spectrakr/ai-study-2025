@@ -30,7 +30,7 @@ load_dotenv()
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
-st.title("주니어 Advisor :sunglasses:")
+st.title("국내 주식 Advisor :sunglasses:")
 
 with st.sidebar:
     btn_reset = st.button("대화 초기화")
