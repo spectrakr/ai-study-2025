@@ -21,8 +21,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema import LLMResult
 
 from pages.tools.tools import (
-    search_stock_news_from_naver,
-    get_stock_info,
+    search_stock_news_from_yahoo,
 )
 
 
@@ -120,7 +119,7 @@ if user_input:
         callbacks=[stream_handler],
     )
     output_parser = StrOutputParser()
-    tools = [search_stock_news_from_naver, get_stock_info]
+    tools = [search_stock_news_from_yahoo]
 
     agent = create_tool_calling_agent(llm, tools, prompt)
 
